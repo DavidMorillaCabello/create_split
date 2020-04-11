@@ -33,6 +33,7 @@ The following parameters should be introduced:
 * **`-d / --device_list`** Delimited list with the aimed devices.
 * **`-t / --data_type`** Datatype to extract files from.
 * **`--test_size`** Optional training size for the split. The default is set to 0.25.
+* **`-e/--exclude`** Optional list with global path for folders to be excluded.
 
 The code will list all the files' name of the specified datatype in the data folder from each device
 and store it in an object with its path, date, session and device.

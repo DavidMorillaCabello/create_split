@@ -23,7 +23,7 @@ def extract_subfolders(path):
     '''
         Returns all the subfolders' name of a directory as a str list.
     '''
-    return [f for f in sorted(listdir(path)) if isdir(join(path, f))]
+    return [f for f in sorted(listdir(path)) if (isdir(join(path, f)) and not(join(path,f) in opts.exclude.split(",")))]
 
 def get_all_files():
     '''
@@ -80,7 +80,7 @@ def write_file(name, data):
     '''
     with open(name, "w+") as f:
 
-        print("Openned file: {}".format(opts.split))
+        print("Openned file: {}".format(name))
 
         for data_item in data:
             file_path = join(data_item.date, data_item.session)
