@@ -9,6 +9,13 @@ options = SplitOptions()
 opts = options.parse()
 cwd = getcwd()
 
+if opts.verbose:
+    def verbose_print(*args):
+        for arg in args:
+            print(arg)
+else:
+    verbose_print = lambda *a: None
+
 def extract_files(path, date, session, device, data_types):
     """
         Return all the files' name of a directory that matches a data type.
@@ -19,6 +26,7 @@ def extract_files(path, date, session, device, data_types):
     
     if opts.pop_limits:    
         # Delete first and last for algorithms that take 
+        verbose_print("Pop limits activated. Popping: \n{}\n{}".format(result[0].name,result[-1].name))
         result.pop(0)
         result.pop(-1)
     
@@ -54,28 +62,27 @@ def get_all_files():
 
     path = join(cwd, opts.folder)
 
-    print("Extracting from path: {}".format(path))
+    verbose_print("Extracting from path: {}".format(path))
 
     dates = extract_subfolders(path)
 
-    print("Found dates: {}".format(dates))
+    verbose_print("Found dates: {}".format(dates))
 
     for date in dates:
 
         sessions = extract_subfolders(join(path, date))
 
-        print("In date: {} found sessions: {}".format(date, sessions))
+        verbose_print("In date: {} found sessions: {}".format(date, sessions))
 
         for session in sessions:
             for device in opts.device_list.split(","):
 
-                print("In session: {} extracting device: {}".format(session, device))
+                verbose_print("In session: {} extracting device: {}".format(session, device))
 
                 if isdir(join(path, date, session, device, "data")):
                     files.extend(extract_files(
                         path, date, session, device, opts.data_type))
 
-    print("Extracted files: ")
     return files
 
 def write_file(name, data):
@@ -86,14 +93,14 @@ def write_file(name, data):
     """
     with open(name, "w+") as f:
 
-        print("Openned file: {}".format(name))
+        verbose_print("Openned file: {}".format(name))
 
         for data_item in data:
             file_path = join(data_item.date, data_item.session)
             file_number = data_item.name.split(".")[0]
             file_data = data_item.data
-            print("Writing data: {} {} {}".format(
-                file_path, file_number, file_data))
+            #print("Writing data: {} {} {}".format(
+            #    file_path, file_number, file_data))
             f.write("{} {} {}\n".format(file_path, file_number, file_data))
     
     f.close()
@@ -118,6 +125,18 @@ if __name__ == "__main__":
     
     used, not_used = train_test_split(files, train_size=opts.use_size, random_state=30)
     train, test = train_test_split(used, test_size=opts.test_size, random_state=42)
+
+    print("\n   RESULT:   \n")
+    print("\n   ---------------------   \n")
+    print("Total items: ".format(files.count))
+    print("\n   ---------------------   \n")
+    print("Used items: ".format(used.count))
+    print("\n   ---------------------   \n")
+    print("Not used items: ".format(not_used.count))
+    print("\n   ---------------------   \n")
+    print("Train items: ".format(train.count))
+    print("\n   ---------------------   \n")
+    print("Test items: ".format(test.count))
 
     not_used_name = "not_used_" + opts.split
     train_name = "train_" + opts.split

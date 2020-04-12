@@ -46,4 +46,4 @@ Then, it will split the data listed in two for training and test and write them 
 
 Asuming test/ is a folder containing the correct structure, it can simply be used this way:
 
-    python3 create_split.py -s test.txt -f test -d "camera00" -t .jpg --test_size 0.3
+    python3 create_split.py -s files.txt -f test -d "image_00" -t .png --test_size 0.3 -p True -u 0.1

@@ -15,7 +15,7 @@ class SplitOptions():
                                  help='Delimited list with the aimed devices', required=True)
         self.parser.add_argument('-t', '--data_type', type=str,
                                  help='Datatype to extract files from', required=True)
-        self.parser.add_argument('-u','--use_size', type=self.coefficient_float,
+        self.parser.add_argument('-u', '--use_size', type=self.coefficient_float,
                                  help='Optional parameter to use a proportion of the total data.', default=1)
         self.parser.add_argument('--test_size', type=self.coefficient_float,
                                  help='Optional test size for split. Default is 0.25', default=0.25)
@@ -23,6 +23,8 @@ class SplitOptions():
                                  help='Optional list with folders to exclude.', default="")
         self.parser.add_argument('-p', '--pop_limits', type=bool,
                                  help='Optional parameter to pop the limits (per session) from the list of files.', default=False)
+        self.parser.add_argument('-v', '--verbose', type=bool,
+                                 help='Optional parameter to print additional info for debug purposes.', default=False)
 
     def coefficient_float(self, x):
         try:
