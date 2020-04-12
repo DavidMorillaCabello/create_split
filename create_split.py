@@ -10,23 +10,29 @@ opts = options.parse()
 cwd = getcwd()
 
 def extract_files(path, date, session, device, data_types):
-    '''
+    """
         Return all the files' name of a directory that matches a data type.
         A Data object is created to store it's path, date, session, device 
-    '''
+    """
     full_path = join(path, date, session, device, "data")
-
-    return [Data(path, date, session, device, f) for f in sorted(listdir(full_path)) if (isfile(join(full_path, f)) and f.split(".")[-1] == data_types.split(".")[-1])]
+    result = [Data(path, date, session, device, f) for f in sorted(listdir(full_path)) if (isfile(join(full_path, f)) and f.split(".")[-1] == data_types.split(".")[-1])]
+    
+    if opts.pop_limits:    
+        # Delete first and last for algorithms that take 
+        result.pop(0)
+        result.pop(-1)
+    
+    return result
 
 
 def extract_subfolders(path):
-    '''
+    """
         Returns all the subfolders' name of a directory as a str list.
-    '''
+    """
     return [f for f in sorted(listdir(path)) if (isdir(join(path, f)) and not(join(path,f) in opts.exclude.split(",")))]
 
 def get_all_files():
-    '''
+    """
         Function to gather all file names from a set of folders.
         The set is assumed to be organised according to:
         date/
@@ -42,7 +48,7 @@ def get_all_files():
         * Session makes reference to an internal stamp for the same date.
         * The different data folders refer to different sensors (e.g. a set of cameras)
         * Inside every sensor, tere is a data folder and inside it are all the files.
-    '''
+    """
     dates = []
     files = []
 
@@ -73,11 +79,11 @@ def get_all_files():
     return files
 
 def write_file(name, data):
-    '''
+    """
         Writes the Data objects listed in the following format:
             date/session number device
         in a file named with the indicated name.
-    '''
+    """
     with open(name, "w+") as f:
 
         print("Openned file: {}".format(name))
@@ -93,9 +99,9 @@ def write_file(name, data):
     f.close()
 
 class Data:
-    '''
+    """
         Structure to store values about each file gathered.
-    '''
+    """
     def __init__(self, path, date, session, data, name):
         self.path = path
         self.date = date
@@ -110,11 +116,14 @@ if __name__ == "__main__":
 
     files = get_all_files()
     
-    train, test = train_test_split(files, test_size=opts.test_size, random_state=42)
+    used, not_used = train_test_split(files, train_size=opts.use_size, random_state=30)
+    train, test = train_test_split(used, test_size=opts.test_size, random_state=42)
 
+    not_used_name = "not_used_" + opts.split
     train_name = "train_" + opts.split
     test_name = "test_" + opts.split
 
+    write_file(not_used_name,not_used)
     write_file(train_name,train)
     write_file(test_name,test)
 
