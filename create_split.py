@@ -128,15 +128,16 @@ if __name__ == "__main__":
 
     print("\n   RESULT:   \n")
     print("\n   ---------------------   \n")
-    print("Total items: ".format(files.count))
+    print("   Total items: {}".format(len(files)))
     print("\n   ---------------------   \n")
-    print("Used items: ".format(used.count))
+    print("   Used items: {}".format(len(used)))
     print("\n   ---------------------   \n")
-    print("Not used items: ".format(not_used.count))
+    print("   Not used items: {}".format(len(not_used)))
     print("\n   ---------------------   \n")
-    print("Train items: ".format(train.count))
+    print("   Train items: {}".format(len(train)))
     print("\n   ---------------------   \n")
-    print("Test items: ".format(test.count))
+    print("   Test items: {}".format(len(test)))
+    print("\n   ---------------------   \n")
 
     not_used_name = "not_used_" + opts.split
     train_name = "train_" + opts.split
